@@ -93,12 +93,12 @@ def secion_5_random_search_evaluation(env, num_of_runs: int) -> float:
 
     # plot histogram of the num of episodes to reach the max reward of 200
     plt.hist(num_of_episodes_to_max_reward)
-    plt.title(f"Histogram of the number of episodes to reach the max reward out of {num_of_runs} search runs")
-    plt.xlabel(f"episode number to reach the max reward")
-    plt.ylabel('histogram count')
+    plt.title(f"Histogram of the number of episodes to reach the max reward out of {num_of_runs} search runs", fontsize=16)
+    plt.xlabel(f"Episode number to reach the max reward", fontsize=14)
+    plt.ylabel('Histogram count', fontsize=14)
     plt.axvline(avg_num_of_episodes_to_max_reward, color='r', linestyle='dashed', linewidth=1)
     # add legend
-    plt.legend([f'Average: {avg_num_of_episodes_to_max_reward}'])
+    plt.legend([f'Average: {avg_num_of_episodes_to_max_reward}'], fontsize=14)
     plt.show()
 
     return avg_num_of_episodes_to_max_reward
