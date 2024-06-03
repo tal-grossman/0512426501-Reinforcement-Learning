@@ -22,6 +22,17 @@ python3 3.1_lis.py -i <array of integers with spaces>
 ```
 python3 3.1_lis.py -i 4 2 3 1 5 6
 ```
+`
+### 4.1 mnist:
+#### Description:
+The program implements and runs a classifier that predicts the class (label) of several test-set inputs using the MNIST dataset.
+#### How To Run:
+Run the following command in the terminal:
+```
+python3 mnist.py
+```
+
+
 
 
 ### 4.2 gym_cart_pole:
