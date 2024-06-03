@@ -24,11 +24,11 @@ python3 3.1_lis.py -i 4 2 3 1 5 6
 ```
 
 
-### 4.2 open_ai_gym:
+### 4.2 gym_cart_pole:
 #### Description:
 The program implements and run all the parts of the assignment 4.2. see comments in main function for more details.
 #### How To Run:
 Run the following command in the terminal:
 ```
-python3 4.2_open_ai_gym.py
+python3 gym_cart_pole.py
 ```
