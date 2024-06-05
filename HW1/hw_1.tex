@@ -135,26 +135,69 @@ def longest_increasing_subsequence(arr: List[int]) -> Tuple[int, List[int]]:
 \end{enumerate} % Moses The Mouse
 
 \subsection{Language Model} 
-\begin{enumerate} % language model
-    \item TODO
-\end{enumerate} % language model
+    please see hand-written solution in the attached PDF file: \textbf{3.3\_Language\_Model.pdf}
+
 
 \newpage
 \section{Programming}
 \subsection{MNIST}
     \begin{enumerate} % MNIST
-        \item TODO
+        \item done in the attached python file \textbf{mnist.py} 
+        \newline
+        The network architecture consists of a single linear layer with specifications:
+        \begin{itemize}
+            \item Number of epochs = 100
+            \item Optimizer: Stochastic Gradient Descent (SGD)
+            \item Batch size = 100
+            \item Learning rate = 1e-3
+            \item Loss function: Cross-Entropy Loss
+            \item The network architecture consists of a single linear layer.
+        \end{itemize}
+        The accuracy on the test set is 90%.
+        \item done in the attached python file \textbf{mnist.py}
+        \newline
+        The network architecture consists of a single linear layer with specifications:
+        \begin{itemize}
+            \item Number of epochs = 100
+            \item Optimizer: Adam
+            \item Batch size = 1000
+            \item Learning rate = 1e-2
+            \item Loss function: Cross-Entropy Loss
+            \item The network architecture consists of a single linear layer.
+        \end{itemize}
+        The accuracy on the test set is 90%.
+        \item done in the attached python file \textbf{mnist.py}
+        \newline
+        Additionally to the network architecture, one hidden layer has been added with 500 units and ReLU activation function. 
+        specifications:
+        \begin{itemize}
+            \item Number of epochs = 100
+            \item Optimizer: Adam
+            \item Batch size = 200
+            \item Learning rate = 0.01
+            \item Loss function: Cross-Entropy Loss
+        \end{itemize}
+        The accuracy on the test set is 92%.
+        
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.5\textwidth]{train_loss_plots.png}
+            \caption{Training loss curve. We can observe the faster convergence (in terms of epochs) of Section 2 compared to Section 1, as required.}
+            \label{fig:figure_label}
+        \end{figure}       
+        
+        
     \end{enumerate} % MNIST
 
 
 \subsection{OpenAI Gym}
     \begin{enumerate} % OpenAI Gym
-        \item done in the attached python file \textbf{4.2\_open\_ai\_gym.py}
-        \item done in the attached python file \textbf{4.2\_open\_ai\_gym.py}
-        \item done in the attached python file \textbf{4.2\_open\_ai\_gym.py}
-        \item done in the attached python file \textbf{4.2\_open\_ai\_gym.py}
-        \item done in the attached python file \textbf{4.2\_open\_ai\_gym.py}
-        \begin{figure}[h]
+        \item done in the attached python file \textbf{gym\_cart\_pole.py}
+        \item done in the attached python file \textbf{gym\_cart\_pole.py}
+        \item done in the attached python file \textbf{gym\_cart\_pole.py}
+        \item done in the attached python file \textbf{gym\_cart\_pole.py}
+        \item done in the attached python file \textbf{gym\_cart\_pole.py}
+        \begin{figure}[H]
             \centering
             \includegraphics[width=0.5\textwidth]{4_2_5_hist.png}
             \caption{Histogram of the number of episodes to reach the max reward out of 1000 search runs, average is 14.65 episodes.}
