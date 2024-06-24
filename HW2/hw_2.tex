@@ -1,0 +1,74 @@
+\documentclass{assignmeownt}
+\usepackage{listings}
+\usepackage{amsmath}
+
+
+\coursenumber{05124265}
+\coursetitle{Reinforcement Learning}
+\title{Exercise 2}
+\author{Tal Grossman, 201512282 , Moshe TODO}
+\date{24/06/2024}
+
+
+\begin{document}
+\maketitle
+\thispagestyle{firststyle}
+\section{Theory}
+\subsection{Question 1}
+TODO
+\newline
+please see attached PDF file \textbf{1\_Q1.pdf}
+
+\subsection{Question 2}
+\begin{enumerate} % Question 2
+\item Formal MDP definition:
+\newline
+\begin{itemize}
+
+\item State space
+S = $\{(\nu_0, \dots, \nu_{N}, k) : \nu_i \in \{0, 1\}, k \in \{0, 1,  \dots, 9\}\}$
+\newline
+Each state is represented by a binary vector of length N+1 and a number k. The "ON" bits in the vecotrs represent the available digits and the number k represent the last random index position.
+\newline
+
+\item Action space
+A = $\{0, 1, \dots, N\}$
+\newline
+Possibles actions represents the selection of the index of the next digit. These actions depends on the state space and its current binary vector.
+\newline
+I.e. the binary vector holds the available positions where the digit can be placed, And so for some vector V, possible actions are: $A(S(V, k)) = \{i : \nu_i = 1\}$
+
+\item Transition probabilities
+\newline
+$$
+P(s' | s, a) = P(\nu_0', \dots, \nu_{N}', k' | \nu_0, \dots, \nu_{N}, k, a) = 
+\begin{cases} 
+\frac{1}{10} &  a \in A(S(V, k)), \nu_{a}'=0, \nu_{i}'=\nu_{i} : \forall{i}\neq{a},\ k \in\{0, \dots, 9\}   \\
+0 & \text{otherwise}
+\end{cases}
+$$
+\newline
+The transition probability limits the index selection to the available positions in the binary vector. The probability of the next digit is uniform with an equal probability of $\frac{1}{10}$.
+
+\item Reward function $r(s, a)$ = $r((\nu_0, \dots, \nu_{N}, k), a)$ = $ k \cdot{10^a} $
+\newline
+the reward is determined by the last index position and the value of the digit in that position.
+
+\item initial state $s_0 = (\{0\}^{N+1}, k): k \in \{0, 1, \dots, 9\} \, each \, w.p \, \frac{1}{10}$
+\newline
+The initial state is a random number k and a binary vector of length N+1 with all zeros.
+\item discount factor $\gamma = 1$
+\newline
+The discount parameter is set to 1, meaning that the agent does not discount future rewards (Finite horizon problem).
+
+
+\end{itemize}
+
+
+\end{enumerate} % Question 2
+
+%% end of subsection 2
+
+
+
+\end{document}
