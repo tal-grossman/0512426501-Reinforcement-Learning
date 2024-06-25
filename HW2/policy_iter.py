@@ -1,7 +1,8 @@
 ##################################
 # Create env
 import gym
-env = gym.make('FrozenLake-v0')
+# import gymnasium as gym
+env = gym.make('FrozenLake-v1')
 env = env.env
 print(env.__doc__)
 print("")
@@ -16,13 +17,15 @@ import matplotlib.pyplot as plt
 np.set_printoptions(precision=3)
 
 # Seed RNGs so you get the same printouts as me
-env.seed(0); from gym.spaces import prng; prng.seed(10)
+# env.seed(0); from gym.spaces import prng; prng.seed(10)
+# from gym.spaces import prng; prng.seed(10)
+np.random.seed(10)
 # Generate the episode
-env.reset()
+env.reset(seed=0)
 for t in range(100):
     env.render()
     a = env.action_space.sample()
-    ob, rew, done, _ = env.step(a)
+    ob, rew, done, _, _ = env.step(a)
     if done:
         break
 assert done
@@ -39,7 +42,8 @@ class MDP(object):
         self.nS = nS # number of states
         self.nA = nA # number of actions
         self.desc = desc # 2D array specifying what each grid cell means (used for plotting)
-mdp = MDP( {s : {a : [tup[:3] for tup in tups] for (a, tups) in a2d.items()} for (s, a2d) in env.P.items()}, env.nS, env.nA, env.desc)
+mdp = MDP( {s : {a : [tup[:3] for tup in tups] for (a, tups) in a2d.items()} for (s, a2d) in env.P.items()}, 
+          env.observation_space.n, env.action_space.n, env.desc)
 GAMMA = 0.95 # we'll be using this same value in subsequent problems
 
 print("")
@@ -59,7 +63,20 @@ print("")
 
 def compute_vpi(pi, mdp, gamma):
     # use pi[state] to access the action that's prescribed by this policy
-    V = np.ones(mdp.nS) # REPLACE THIS LINE WITH YOUR CODE
+    # V = np.ones(mdp.nS) # REPLACE THIS LINE WITH YOUR CODE
+    
+    # recall the Bellman equation
+    # V_pi(s) = sum_over_{s'}( P(s'|s,pi(s)) * (R(s,pi(s),s') + gamma * V_pi(s')) )
+    V = np.zeros(mdp.nS)
+    P = np.zeros([mdp.nS, mdp.nS])
+    R = np.zeros(mdp.nS)
+    for s in range(mdp.nS):
+        for prob, next_state, reward in mdp.P[s][pi[s]]:
+            # P[s, next_state] += prob
+            P[s, next_state] = prob
+            R[s] += reward * prob
+    A = np.eye(mdp.nS) - gamma * P
+    V = np.linalg.solve(A, R)
     return V
 
 actual_val = compute_vpi(np.arange(16) % mdp.nA, mdp, gamma=GAMMA)
@@ -69,7 +86,16 @@ print("Policy Value: ", actual_val)
 # Programing Question No. 2, part 2 - implement where required.
 
 def compute_qpi(vpi, mdp, gamma):
-    Qpi = np.zeros([mdp.nS, mdp.nA]) # REPLACE THIS LINE WITH YOUR CODE
+    # Qpi = np.zeros([mdp.nS, mdp.nA]) # REPLACE THIS LINE WITH YOUR CODE
+
+    # recall that
+    # Q_pi(s,a) = sum_over_{s'} P(s'|s,a) * (R(s,a,s') + gamma * V_pi(s'))
+    Qpi = np.zeros([mdp.nS, mdp.nA])
+    for s in range(mdp.nS):
+        for a in range(mdp.nA):
+            for prob, next_state, reward in mdp.P[s][a]:
+                Qpi[s, a] += prob * (reward + gamma * vpi[next_state])
+
     return Qpi
 
 Qpi = compute_qpi(np.arange(mdp.nS), mdp, gamma=0.95)
@@ -89,13 +115,30 @@ def policy_iteration(mdp, gamma, nIt):
     for it in range(nIt):
         # YOUR CODE HERE
         # you need to compute qpi which is the state-action values for current pi
+        vpi = compute_vpi(pi=pi_prev, mdp=mdp, gamma=gamma)
+        qpi = compute_qpi(vpi=vpi, mdp=mdp, gamma=gamma)
         pi = qpi.argmax(axis=1)
         print("%4i      | %6i        | %6.5f"%(it, (pi != pi_prev).sum(), vpi[0]))
         Vs.append(vpi)
         pis.append(pi)
         pi_prev = pi
-    return Vs, pis
+
+    # plot state value over iterations
+    x = [i for i in range(1, nIt + 1)]
+    plt.figure(figsize=(3, 3))
+    for state in range(mdp.nS):
+        y = [Vs[it][state] for it in range(nIt)]
+        plt.plot(x, y, label=f'state {state}')
+    plt.xlabel('Iterations')
+    plt.ylabel('State value')
+    plt.title(f'Value function per state over {nIt} iterations')
+    plt.xticks(x)
+    plt.legend(bbox_to_anchor=(1.13, 1.015), loc=1)
+    plt.grid()
+    plt.show()
+    return Vs, pis  
 
 
 Vs_PI, pis_PI = policy_iteration(mdp, gamma=0.95, nIt=20)
 plt.plot(Vs_PI);
+plt.show()
