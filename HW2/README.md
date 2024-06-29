@@ -1,7 +1,7 @@
 # HW2 - Reinforcement Learning by Moshe Yelisevitch and Tal Grossman
 
+# Programmig Section  
 
-# Question 2 
 ## Required installations
 - create and activate your virtual environment and run the following commands (conda for example):
 ```
@@ -14,6 +14,16 @@ conda activate <your_env_name>
 pip uninstall gym
 pip install gym==0.10.5
 ```
+
+# Question 1
+## How to run the code
+- To run the code, you need to run the following command in your terminal:
+``` python3 value_iter.py ```
+
+
+
+
+# Question 2 
 - also make sure you have the following packages installed: numpy, matplotlib
 ## How to run the code
 - To run the code, you need to run the following command in your terminal:
