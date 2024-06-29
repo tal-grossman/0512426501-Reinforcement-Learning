@@ -1,3 +1,6 @@
+# HW2 - Reinforcement Learning by Moshe Yelisevitch and Tal Grossman
+
+
 # Question 2 
 ## Required installations
 - create and activate your virtual environment and run the following commands (conda for example):
