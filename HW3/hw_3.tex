@@ -42,7 +42,25 @@ completed in python in the attached file \textbf{control.py}
 In that specific run, it took 263 iterations to converge. The plot of the failure rate is as follows:
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.3\textwidth]{ex1_263_failure_plot.png}
+    \includegraphics[width=0.7\textwidth]{ex1_263_failure_plot.png}
+\end{figure}
+
+\subsection{Question 2: Q-Learning}
+\subsubsection{Item 1 - tabular\_Q.py}
+The percentage of successful episodes is roughly \text{56.6\%} . The Q-table is as follows:
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\textwidth]{Q_table_ex2_item1.png}
+\end{figure}
+\subsubsection{Item 2 - network\_Q.py}
+The percentage of successful episodes is roughly \text{34.5\%}.
+This result is worse than what we achieved with tabular Q-learning, probably due to the fact that the network is not
+deep and complicated enough to capture the complexity of the environment. We believe that with a deeper network with
+some activation functions, we could achieve better results.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{score_ex2_item2.png}
 \end{figure}
 
 \end{document}
