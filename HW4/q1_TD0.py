@@ -55,7 +55,12 @@ class BlackjackTD:
             return trajectory
 
     def add_terminal_state(self, trajectory):
-        trajectory += [21]
+        last_reward, last_action, last_state = trajectory[-1], trajectory[-2], trajectory[-3]
+        if last_reward == -1 and last_action == 'h': # Gambler busts
+            terminal = 0
+            trajectory += [terminal]
+        else: # gambler wins, draw or gambler loses not due to busting
+            trajectory += [last_state]
         return trajectory
     def td_update(self, state, reward, next_state):
         self.values[state] += self.alpha * (reward + self.gamma * self.values[next_state] - self.values[state])
