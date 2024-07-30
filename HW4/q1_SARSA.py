@@ -101,11 +101,11 @@ def optimal_policy_to_dict(policy):
     return {state+4: 'hit' if action == 0 else 'stand' for state, action in enumerate(policy[4:])}
 
 if __name__ == "__main__":
-    blackjack_sarsa = BlackjackSARSA(alpha=0.01, gamma=0.5)
-    blackjack_sarsa.train(episodes=100000)
+    blackjack_sarsa = BlackjackSARSA(alpha=0.01, gamma=0.8)
+    blackjack_sarsa.train(episodes=300000)
     blackjack_sarsa.compute_optimal_policy()
     print(f'The optimal policy is: {optimal_policy_to_dict(blackjack_sarsa.policy)}')
-    blackjack_td = BlackjackTD(alpha=0.01, gamma=0.5)
+    blackjack_td = BlackjackTD(alpha=0.01, gamma=0.8)
     blackjack_td.policy = blackjack_sarsa.policy
     blackjack_td.train(episodes=300000)
     print(f"Probability of winning with the optimal policy: {blackjack_td.get_win_probability()}")

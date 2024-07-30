@@ -84,6 +84,8 @@ class BlackjackTD:
         return self.wins / self.episodes
 
 if __name__ == "__main__":
-    blackjack_td = BlackjackTD(alpha=0.1, gamma=0.8)
-    blackjack_td.train(episodes=100000)
+    blackjack_td = BlackjackTD(alpha=0.01, gamma=0.8)
+    blackjack_td.train(episodes=300000)
     print(f"Probability of winning: {blackjack_td.get_win_probability()}")
+    print('value for every state:',
+          {state + 4: round(values, 2) for state, values in enumerate(blackjack_td.values[4:])})
