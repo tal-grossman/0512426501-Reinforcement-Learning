@@ -1,0 +1,15 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+*.log
+*.pyc
+*.zip
+
+*.vscode/
+
+# specific files
+HW1/hw_1.pdf
+HW1/201512282_211388491.zip
+HW1/most_probable_word.py
