@@ -13,3 +13,14 @@
 HW1/hw_1.pdf
 HW1/201512282_211388491.zip
 HW1/most_probable_word.py
+
+# ignore directories files for project setup
+*/HC ROMS/*
+*/ROMS/*
+*/rars/*
+*.rar
+HW5/env_fix_pong.py
+
+# ignore projects output
+/tmp/*
+*.pkl

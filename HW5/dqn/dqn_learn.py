@@ -124,6 +124,13 @@ def dqn_learing(
     ######
 
     # YOUR CODE HERE
+    Q = q_func(input_arg, num_actions)
+    target_q_func = q_func(input_arg, num_actions)
+    if USE_CUDA:
+        Q.cuda()
+        target_q_func.cuda()
+    target_q_func.load_state_dict(Q.state_dict())
+    
 
     ######
 
@@ -180,6 +187,13 @@ def dqn_learing(
         #####
 
         # YOUR CODE HERE
+        idx = replay_buffer.store_frame(last_obs)
+        encoded_last_obs = replay_buffer.encode_recent_observation()
+        action = select_epilson_greedy_action(target_q_func, encoded_last_obs, t)
+        last_obs, reward, done, info = env.step(action.item())
+        replay_buffer.store_effect(idx, action, reward, done)
+        if done:
+            last_obs = env.reset()
 
         #####
 
@@ -218,6 +232,41 @@ def dqn_learing(
             #####
 
             # YOUR CODE HERE
+            # 3.a: use the replay buffer to sample a batch of transitions
+            obs_batch, act_batch, rew_batch, next_obs_batch, done_mask = replay_buffer.sample(batch_size)
+
+            # Move the variables to the GPU if available
+            if USE_CUDA:
+                obs_batch = torch.tensor(obs_batch, dtype=torch.float32).cuda()
+                act_batch = torch.tensor(act_batch, dtype=torch.long).cuda()
+                rew_batch = torch.tensor(rew_batch, dtype=torch.float32).cuda()
+                next_obs_batch = torch.tensor(next_obs_batch, dtype=torch.float32).cuda()
+                done_mask = torch.tensor(done_mask, dtype=torch.float32).cuda()
+
+            # 3.b: compute the Bellman error
+            
+            # evaulated Q values
+            current_q_values = Q(obs_batch).gather(1, act_batch.unsqueeze(1))
+
+            # target Q values
+            next_q_values = target_q_func(next_obs_batch).detach() # detach to avoid backpropagation
+            target_q_values = (rew_batch + gamma * next_q_values.max(1)[0] * (1 - done_mask)).unsqueeze(1)
+
+            # compute the corresponding error
+            bellman_error = target_q_values - current_q_values
+
+            # Clip the error between [-1, 1]
+            bellman_error = torch.clamp(bellman_error, -1, 1)
+
+            # 3.c: train the model
+            optimizer.zero_grad()
+            current_q_values.backward(bellman_error)
+            optimizer.step()
+
+            # 3.d: periodically update the target network
+            if t % target_update_freq == 0:
+                target_q_func.load_state_dict(Q.state_dict())
+                num_param_updates += 1
 
             #####
 
