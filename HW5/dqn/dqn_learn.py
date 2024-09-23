@@ -253,14 +253,14 @@ def dqn_learing(
             current_q_values = Q(obs_batch).gather(1, act_batch.unsqueeze(1))
 
             # target Q values
-            next_q_values = target_q_func(next_obs_batch).detach() # detach to avoid backpropagation
+            next_q_values = target_q_func(next_obs_batch)
             target_q_values = (rew_batch + gamma * next_q_values.max(1)[0] * (1 - done_mask)).unsqueeze(1)
 
             # compute the corresponding error
             bellman_error = target_q_values - current_q_values
 
             # Clip the error between [-1, 1]
-            bellman_error = torch.clamp(bellman_error, -1, 1)
+            bellman_error = torch.clamp(bellman_error, -1, 1) * -1 # clip and multilply by -1 to minimize
 
             # 3.c: train the model
             optimizer.zero_grad()
