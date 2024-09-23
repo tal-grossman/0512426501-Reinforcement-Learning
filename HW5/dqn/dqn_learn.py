@@ -3,6 +3,8 @@
 """
 import sys
 import pickle
+import time
+
 import numpy as np
 from collections import namedtuple
 from itertools import count
@@ -115,8 +117,9 @@ def dqn_learing(
         eps_threshold = exploration.value(t)
         if sample > eps_threshold:
             obs = torch.from_numpy(obs).type(dtype).unsqueeze(0) / 255.0
-            # Use volatile = True if variable is only used in inference mode, i.e. don’t save the history
-            return model(Variable(obs, volatile=True)).data.max(1)[1].cpu()
+            # with torch.no_grad() variable is only used in inference mode, i.e. don’t save the history
+            with torch.no_grad():
+                return model(Variable(obs)).data.max(1)[1].cpu()
         else:
             return torch.IntTensor([[random.randrange(num_actions)]])
 
@@ -149,6 +152,7 @@ def dqn_learing(
     best_mean_episode_reward = -float('inf')
     last_obs = env.reset()
     LOG_EVERY_N_STEPS = 10000
+    start_time = time.time()
 
     for t in count():
         ### 1. Check stopping criterion
@@ -191,10 +195,10 @@ def dqn_learing(
         encoded_last_obs = replay_buffer.encode_recent_observation()
         action = select_epilson_greedy_action(target_q_func, encoded_last_obs, t)
         last_obs, reward, done, info = env.step(action.item())
-        replay_buffer.store_effect(idx, action, reward, done)
+
         if done:
             last_obs = env.reset()
-
+        replay_buffer.store_effect(idx, action, reward, done)
         #####
 
         # at this point, the environment should have been advanced one step (and
@@ -237,10 +241,10 @@ def dqn_learing(
 
             # Move the variables to the GPU if available
             if USE_CUDA:
-                obs_batch = torch.tensor(obs_batch, dtype=torch.float32).cuda()
-                act_batch = torch.tensor(act_batch, dtype=torch.long).cuda()
+                obs_batch = torch.tensor(obs_batch / 255.0, dtype=torch.float32).cuda()
+                act_batch = torch.tensor(act_batch, dtype=torch.int64).cuda()
                 rew_batch = torch.tensor(rew_batch, dtype=torch.float32).cuda()
-                next_obs_batch = torch.tensor(next_obs_batch, dtype=torch.float32).cuda()
+                next_obs_batch = torch.tensor(next_obs_batch / 255.0, dtype=torch.float32).cuda()
                 done_mask = torch.tensor(done_mask, dtype=torch.float32).cuda()
 
             # 3.b: compute the Bellman error
@@ -264,10 +268,9 @@ def dqn_learing(
             optimizer.step()
 
             # 3.d: periodically update the target network
-            if t % target_update_freq == 0:
+            num_param_updates += 1
+            if num_param_updates % target_update_freq == 0:
                 target_q_func.load_state_dict(Q.state_dict())
-                num_param_updates += 1
-
             #####
 
         ### 4. Log progress and keep track of statistics
@@ -281,14 +284,38 @@ def dqn_learing(
         Statistic["best_mean_episode_rewards"].append(best_mean_episode_reward)
 
         if t % LOG_EVERY_N_STEPS == 0 and t > learning_starts:
+            elapsed_time = int(time.time() - start_time)
+            hours = int(elapsed_time // 3600)
+            minutes = int((elapsed_time % 3600) // 60)
+            seconds = int(elapsed_time % 60)
             print("Timestep %d" % (t,))
+            print(f"Time elapsed: {hours} hours, {minutes} minutes, {seconds} seconds")
+
+            timesteps_per_second = t / elapsed_time if elapsed_time > 0 else float('inf')
+            print(f"Average timesteps per second: {timesteps_per_second}")
+
+
             print("mean reward (100 episodes) %f" % mean_episode_reward)
             print("best mean reward %f" % best_mean_episode_reward)
             print("episodes %d" % len(episode_rewards))
             print("exploration %f" % exploration.value(t))
             sys.stdout.flush()
+            # # add these to statistics
+            # Statistic["timestamp"].append(t)
+            # Statistic["episodes"].append(len(episode_rewards))
+            # Statistic["exploration"].append(exploration.value(t))
+
 
             # Dump statistics to pickle
             with open('statistics.pkl', 'wb') as f:
                 pickle.dump(Statistic, f)
                 print("Saved to %s" % 'statistics.pkl')
+
+            # # print gpu details and memory usage
+            # if USE_CUDA:
+            #     # print how much gpu memory is free and how much is being used
+            #     print("Memory Usage:")
+            #     print(torch.cuda.memory_summary())
+
+
+
