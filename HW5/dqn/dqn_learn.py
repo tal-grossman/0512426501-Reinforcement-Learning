@@ -21,6 +21,7 @@ from utils.gym import get_wrapper_by_name
 
 USE_CUDA = torch.cuda.is_available()
 dtype = torch.cuda.FloatTensor if torch.cuda.is_available() else torch.FloatTensor
+import os
 
 class Variable(autograd.Variable):
     def __init__(self, data, *args, **kwargs):
@@ -41,6 +42,7 @@ Statistic = {
 }
 
 def dqn_learing(
+    run_output_dir, 
     env,
     q_func,
     optimizer_spec,
@@ -52,7 +54,7 @@ def dqn_learing(
     learning_starts=50000,
     learning_freq=4,
     frame_history_len=4,
-    target_update_freq=10000
+    target_update_freq=10000,
     ):
 
     """Run Deep Q-learning algorithm.
@@ -98,6 +100,9 @@ def dqn_learing(
     """
     assert type(env.observation_space) == gym.spaces.Box
     assert type(env.action_space)      == gym.spaces.Discrete
+
+    # get the output dir from env   
+    statistics_pkl_path = os.path.join(run_output_dir, 'statistics.pkl')
 
     ###############
     # BUILD MODEL #
@@ -288,7 +293,8 @@ def dqn_learing(
             hours = int(elapsed_time // 3600)
             minutes = int((elapsed_time % 3600) // 60)
             seconds = int(elapsed_time % 60)
-            print("Timestep %d" % (t,))
+            print("Timestep %s" % format(t, ','))
+
             print(f"Time elapsed: {hours} hours, {minutes} minutes, {seconds} seconds")
 
             timesteps_per_second = t / elapsed_time if elapsed_time > 0 else float('inf')
@@ -307,9 +313,9 @@ def dqn_learing(
 
 
             # Dump statistics to pickle
-            with open('statistics.pkl', 'wb') as f:
+            with open(f"{statistics_pkl_path}", 'wb') as f:
                 pickle.dump(Statistic, f)
-                print("Saved to %s" % 'statistics.pkl')
+                print("Saved to %s" % f"{statistics_pkl_path}")
 
             # # print gpu details and memory usage
             # if USE_CUDA:
