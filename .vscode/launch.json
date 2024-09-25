@@ -1,0 +1,122 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "main_hw_5_gamma_low",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/dqn/main.py",
+            "args": [
+                "--run_name", "gamma_low_0.5",
+                "--gamma", "0.5"
+            ],
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "main_hw_5_gamma_mid",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/dqn/main.py",
+            "args": [
+                "--run_name", "gamma_mid_0.9",
+                "--gamma", "0.9"
+            ],
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "main_hw_5_gamma_high",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/dqn/main.py",
+            "args": [
+                "--run_name", "gamma_high_0.99999",
+                "--gamma", "0.99999"
+            ],
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "main_hw_5_epsilon_low",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/dqn/main.py",
+            "args": [
+                "--run_name", "epsilon_low_0.1",
+                "--epsilon", "0.1"
+            ],
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "main_hw_5_epsilon_mid",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/dqn/main.py",
+            "args": [
+                "--run_name", "epsilon_mid_0.5",
+                "--epsilon", "0.5"
+            ],
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "main_hw_5_epsilon_high",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/dqn/main.py",
+            "args": [
+                "--run_name", "epsilon_high_0.9",
+                "--epsilon", "0.9"
+            ],
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "main_hw_5_lr_low",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/dqn/main.py",
+            "args": [
+                "--run_name", "lr_low_0.0001",
+                "--lr", "0.0001"
+            ],
+            "console": "integratedTerminal",
+        },
+        {
+            "name": "hw_5_plots",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/dqn/plots.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "main_hw_5_plot_results",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/HW5/plot_results.py",
+            "args": [
+                "--names_list", 
+                "base: gamma=0.99",
+                "gamma=0.5", 
+                "gamma=0.9", 
+                // "gamma=0.99999", 
+                "gamma=1.0",
+                "--pkl_files_paths",
+                "HW5/results/base_14_hours_training/statistics.pkl", 
+                "HW5/results/gamma_low_0.5/statistics.pkl", 
+                "HW5/results/gamma_mid_0.9/statistics.pkl", 
+                // "HW5/results/gamma_high_0.99999/statistics.pkl", 
+                "HW5/results/gamma_one/statistics.pkl",
+                "--output_dir", "HW5/results"
+            ],
+            "console": "integratedTerminal"
+        }
+        
+    ]
+}

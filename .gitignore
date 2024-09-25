@@ -20,6 +20,9 @@ HW1/most_probable_word.py
 */rars/*
 *.rar
 HW5/env_fix_pong.py
+HW5/results/*
+HW5/checkpoints/*
+/results/*
 
 # ignore projects output
 /tmp/*
