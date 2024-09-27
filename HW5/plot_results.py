@@ -5,13 +5,14 @@ import argparse
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 
+
 def plot_results(names_list, pkl_files_paths, output_dir):
     data = []
     for name, pkl_file_path in zip(names_list, pkl_files_paths):
         # load the pkl file
         with open(pkl_file_path, 'rb') as f:
             data.append(pickle.load(f))
-            
+
     # plot the data so we have to plots in the same figure
     # 1. for mean_episode_rewards
     # 2. for best_mean_episode_rewards
@@ -29,13 +30,13 @@ def plot_results(names_list, pkl_files_paths, output_dir):
         ax2.plot(time, best_mean_episode_rewards, label=f"{name}, max: {max_best_mean_episode_rewards:.1f}")
 
     ax1.set_ylabel("Mean Episode Rewards")
-    ax1.set_title("Mean Episode Rewards")
+    ax1.set_title("Mean Episode Rewards Over Steps")
     ax2.set_ylabel("Best Mean Episode Rewards")
-    ax2.set_title("Best Mean Episode Rewards")
+    ax2.set_title("Best Mean Episode Rewards Over Steps")
     for ax in [ax1, ax2]:
         ax.legend()
         ax.legend(loc='lower right')
-        ax.set_xlabel("Timestamps (1m)")
+        ax.set_xlabel("steps [1m]")
         ax.xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: f'{int(x / 1e6):,}'))
         ax.yaxis.set_major_locator(ticker.MultipleLocator(5))  # Set major ticks every 5 units on the y-axis
         ax.axhline(y=0, color='black', linestyle='--', linewidth=0.5)
@@ -52,20 +53,30 @@ def plot_results(names_list, pkl_files_paths, output_dir):
     plt.savefig(output_path)
 
 
-
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--names_list', type=str, help='names list as list', nargs='+', required=True)
-    parser.add_argument('--pkl_files_paths', type=str, help='pkl files paths as list', nargs='+', required=True)
+    parser.add_argument('--names_list', type=str, default=[], help='names list as list', nargs='+')
+    parser.add_argument('--pkl_files_paths', type=str, default=[], help='pkl files paths as list',
+                        nargs='+')
     parser.add_argument('--output_dir', type=str, default='results/', help='Output directory', required=False)
 
     return parser.parse_args()
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
+    NAME2FOLDER = {
+        "gamma=1": "gamma_1",
+        "gamma=0.97": "gamma_0.97",
+        "gamma=0.99": "base_14_hours_training",
+        "gamma=0.95": "gamma_0.95",
+        "gamma=0.9": "gamma_0.9",
+        "gamma=0.5": "gamma_0.5"
+    }
     parser = argparse.ArgumentParser()
     args = parse_args()
-
+    args.names_list = ["gamma=1", "gamma=0.97", "gamma=0.99", "gamma=0.95", "gamma=0.9", "gamma=0.5"]
+    args.pkl_files_paths = [os.path.join(r'C:\Users\moshey\Downloads\HW5', NAME2FOLDER[folder], 'statistics.pkl')
+                            for folder in args.names_list]
     names_list = args.names_list
     pkl_files_paths = args.pkl_files_paths
     output_dir = args.output_dir
